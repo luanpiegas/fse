@@ -3,22 +3,28 @@ Contributors: luanpiegas
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.1
+Stable tag: 1.1.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-FSE Commerce is a 
+FSE Commerce is a modern block theme for editorial storefronts and WooCommerce-powered catalogs. It combines full-site editing, curated shopping templates, and a warm product-first visual system for boutique stores and brand storytelling.
 
+== Installation ==
+
+1. Upload the theme to `/wp-content/themes/fse-commerce/`.
+2. Activate `FSE Commerce` in the WordPress admin.
+3. Install and activate WooCommerce to unlock the shop, product archive, cart, checkout, and single-product templates.
 
 == Changelog ==
 
-= 1.1 =
-* Released: April 14, 2026
+= 1.1.0 =
+* Released April 14, 2026.
+* Improved Theme Check compatibility and refreshed documentation.
 
-= 1.0 =
-* Released: December 22, 2025
+= 1.0.0 =
+* Initial release on December 22, 2025.
 
 == Copyright ==
 

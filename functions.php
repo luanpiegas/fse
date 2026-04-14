@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Register theme supports and editor features.
  */
 function fse_setup() {
-	load_theme_textdomain( 'fse', get_template_directory() . '/assets/lang' );
+	load_theme_textdomain( 'fse-commerce', get_template_directory() . '/languages' );
 
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support( 'editor-styles' );
@@ -39,18 +39,51 @@ function fse_register_pattern_categories() {
 	register_block_pattern_category(
 		'fse',
 		array(
-			'label' => __( 'FSE Theme', 'fse' ),
+			'label' => __( 'FSE Theme', 'fse-commerce' ),
 		)
 	);
 
 	register_block_pattern_category(
 		'fse-store',
 		array(
-			'label' => __( 'FSE Store', 'fse' ),
+			'label' => __( 'FSE Store', 'fse-commerce' ),
 		)
 	);
 }
 add_action( 'init', 'fse_register_pattern_categories' );
+
+/**
+ * Register custom block styles.
+ */
+function fse_register_block_styles() {
+	if ( ! function_exists( 'register_block_style' ) ) {
+		return;
+	}
+
+	register_block_style(
+		'core/button',
+		array(
+			'name'         => 'fse-commerce-quiet-outline',
+			'label'        => __( 'Quiet Outline', 'fse-commerce' ),
+			'inline_style' => '
+				.wp-block-button.is-style-fse-commerce-quiet-outline .wp-block-button__link {
+					background: transparent;
+					color: var(--wp--preset--color--contrast);
+					border: 1px solid var(--wp--preset--color--border);
+					box-shadow: none;
+				}
+
+				.wp-block-button.is-style-fse-commerce-quiet-outline .wp-block-button__link:hover,
+				.wp-block-button.is-style-fse-commerce-quiet-outline .wp-block-button__link:focus {
+					background: var(--wp--preset--color--surface);
+					color: var(--wp--preset--color--contrast);
+					border-color: var(--wp--preset--color--contrast);
+				}
+			',
+		)
+	);
+}
+add_action( 'init', 'fse_register_block_styles' );
 
 /**
  * Get the current theme version.
