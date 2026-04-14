@@ -1,48 +1,200 @@
 <?php
+/**
+ * Theme bootstrap.
+ *
+ * @package FSE
+ */
 
-// enqueue theme styles
-add_action('wp_enqueue_scripts', 'theme_vite_styles');
-function theme_vite_styles()
-{
-    if (!is_wp_error(wp_remote_get('http://localhost:5173/wp-content/themes/vite/@vite/client'))) {
-        add_action('wp_footer', 'add_vite_dev_server_script');
-        function add_vite_dev_server_script(){
-    ?>
-        <script type="module" src="http://localhost:5173/wp-content/themes/vite/@vite/client"></script>
-        <script type="module" src="http://localhost:5173/wp-content/themes/vite/assets/scripts/main.js"></script>
-    <?php
-        }
-
-        add_action('wp_head', 'add_vite_dev_stylesheet');
-        function add_vite_dev_stylesheet() {
-            ?>
-            <link rel="stylesheet" href="http://localhost:5173/wp-content/themes/vite/assets/styles/main.scss">
-            <?php
-        }
-    } else {
-        wp_enqueue_style('theme-styles', get_stylesheet_directory_uri() . '/dist/styles.css' );
-        wp_enqueue_script('theme-scripts', get_stylesheet_directory_uri() . '/dist/scripts.js' );
-    }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-// add theme support for editor styles
-add_action('after_setup_theme', 'theme_vite_setup');
-function theme_vite_setup()
-{
-    add_theme_support('wp-block-styles');
+/**
+ * Register theme supports and editor features.
+ */
+function fse_setup() {
+	load_theme_textdomain( 'fse', get_template_directory() . '/assets/lang' );
+
+	add_theme_support( 'automatic-feed-links' );
+	add_theme_support( 'editor-styles' );
+	add_theme_support( 'post-thumbnails' );
+	add_theme_support( 'responsive-embeds' );
+	add_theme_support( 'wp-block-styles' );
+
+	add_theme_support( 'woocommerce' );
+	add_theme_support( 'wc-product-gallery-zoom' );
+	add_theme_support( 'wc-product-gallery-lightbox' );
+	add_theme_support( 'wc-product-gallery-slider' );
+}
+add_action( 'after_setup_theme', 'fse_setup' );
+
+/**
+ * Register local pattern categories.
+ */
+function fse_register_pattern_categories() {
+	if ( ! function_exists( 'register_block_pattern_category' ) ) {
+		return;
+	}
+
+	register_block_pattern_category(
+		'fse',
+		array(
+			'label' => __( 'FSE Theme', 'fse' ),
+		)
+	);
+
+	register_block_pattern_category(
+		'fse-store',
+		array(
+			'label' => __( 'FSE Store', 'fse' ),
+		)
+	);
+}
+add_action( 'init', 'fse_register_pattern_categories' );
+
+/**
+ * Get the current theme version.
+ *
+ * @return string
+ */
+function fse_get_theme_version() {
+	static $version = null;
+
+	if ( null === $version ) {
+		$version = wp_get_theme()->get( 'Version' );
+	}
+
+	return $version ?: '1.0.0';
 }
 
-// preconect google fonts
-add_action('wp_head', 'theme_vite_preconnect', 1);
-function theme_vite_preconnect()
-{
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com/">';
-    echo '<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>';
+/**
+ * Get the Vite dev server origin.
+ *
+ * @return string
+ */
+function fse_get_vite_origin() {
+	$origin = apply_filters( 'fse_vite_dev_server', 'http://localhost:5173' );
+
+	return untrailingslashit( $origin );
 }
 
-// enqueue google fonts
-add_action('wp_enqueue_scripts', 'theme_vite_fonts');
-function theme_vite_fonts()
-{
-    wp_enqueue_style('theme-vite-fonts', 'https://fonts.googleapis.com/css2?family=Figtree:wght@300;700;900&display=swap', false);
+/**
+ * Check whether the Vite dev server is available.
+ *
+ * @return bool
+ */
+function fse_is_vite_dev_server_running() {
+	static $is_running = null;
+
+	if ( null !== $is_running ) {
+		return $is_running;
+	}
+
+	$response = wp_remote_get(
+		fse_get_vite_origin() . '/@vite/client',
+		array(
+			'timeout'   => 0.35,
+			'sslverify' => false,
+		)
+	);
+
+	$is_running = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
+
+	return $is_running;
 }
+
+/**
+ * Return the parsed Vite manifest.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function fse_get_vite_manifest() {
+	static $manifest = null;
+
+	if ( null !== $manifest ) {
+		return $manifest;
+	}
+
+	$manifest_path = get_theme_file_path( 'dist/manifest.json' );
+
+	if ( ! file_exists( $manifest_path ) ) {
+		$manifest = array();
+		return $manifest;
+	}
+
+	$decoded = json_decode( (string) file_get_contents( $manifest_path ), true );
+	$manifest = is_array( $decoded ) ? $decoded : array();
+
+	return $manifest;
+}
+
+/**
+ * Lookup a Vite manifest entry by source path.
+ *
+ * @param string $entry Entry key from the Vite manifest.
+ * @return array<string, mixed>|null
+ */
+function fse_get_vite_manifest_entry( $entry ) {
+	$manifest = fse_get_vite_manifest();
+
+	return $manifest[ $entry ] ?? null;
+}
+
+/**
+ * Enqueue shared theme styles for the front end and editor.
+ */
+function fse_enqueue_theme_styles() {
+	if ( fse_is_vite_dev_server_running() ) {
+		wp_enqueue_style( 'fse-theme', fse_get_vite_origin() . '/assets/styles/main.css', array(), null );
+		return;
+	}
+
+	$style_entry = fse_get_vite_manifest_entry( 'assets/styles/main.css' );
+
+	if ( empty( $style_entry['file'] ) ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'fse-theme',
+		get_theme_file_uri( 'dist/' . $style_entry['file'] ),
+		array(),
+		fse_get_theme_version()
+	);
+}
+add_action( 'enqueue_block_assets', 'fse_enqueue_theme_styles' );
+
+/**
+ * Load the typography pairing used by the theme and editor.
+ */
+function fse_enqueue_font_faces() {
+	wp_enqueue_style(
+		'fse-fonts',
+		'https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap',
+		array(),
+		null
+	);
+}
+add_action( 'enqueue_block_assets', 'fse_enqueue_font_faces' );
+
+/**
+ * Add font preconnect hints.
+ *
+ * @param array  $urls          URLs to print for resource hints.
+ * @param string $relation_type Resource relation type.
+ * @return array
+ */
+function fse_resource_hints( $urls, $relation_type ) {
+	if ( 'preconnect' !== $relation_type ) {
+		return $urls;
+	}
+
+	$urls[] = 'https://fonts.googleapis.com';
+	$urls[] = array(
+		'href'        => 'https://fonts.gstatic.com',
+		'crossorigin' => 'anonymous',
+	);
+
+	return $urls;
+}
+add_filter( 'wp_resource_hints', 'fse_resource_hints', 10, 2 );

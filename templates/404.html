@@ -1,25 +1,29 @@
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<main>
-    <!-- wp:group {"layout":{"type":"constrained"}} -->
-    <div class="wp-block-group">
-        <!-- wp:heading {"level":1} -->
-        <h1>404</h1>
-        <!-- /wp:heading -->
+<!-- wp:group {"tagName":"main","className":"content-shell","layout":{"type":"constrained"}} -->
+<main class="wp-block-group content-shell">
+	<!-- wp:group {"align":"wide","className":"section-card","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide section-card">
+		<!-- wp:heading {"level":1} -->
+		<h1>The page you&rsquo;re looking for drifted off the map.</h1>
+		<!-- /wp:heading -->
 
-        <!-- wp:paragraph -->
-        <p>404 page.</p>
-        <!-- /wp:paragraph -->
+		<!-- wp:paragraph -->
+		<p>Try a search, return to the homepage, or keep browsing through the editor-powered pages in this theme.</p>
+		<!-- /wp:paragraph -->
 
-        <!-- wp:buttons -->
-        <div class="wp-block-buttons">
-            <!-- wp:button {"className":"is-style-outline"} -->
-            <div class="wp-block-button is-style-outline"><a class="wp-block-button__link" href="/">Button</a></div>
-            <!-- /wp:button -->
-        </div>
-        <!-- /wp:buttons -->
-    </div>
-    <!-- /wp:group -->
+		<!-- wp:search {"label":"Search","showLabel":false,"buttonText":"Search","buttonPosition":"button-inside"} /-->
+
+		<!-- wp:buttons -->
+		<div class="wp-block-buttons">
+			<!-- wp:button -->
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/">Back home</a></div>
+			<!-- /wp:button -->
+		</div>
+		<!-- /wp:buttons -->
+	</div>
+	<!-- /wp:group -->
 </main>
+<!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

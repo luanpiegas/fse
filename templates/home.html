@@ -5,16 +5,16 @@
 	<!-- wp:group {"align":"wide","className":"section-card","layout":{"type":"constrained"}} -->
 	<div class="wp-block-group alignwide section-card">
 		<!-- wp:heading {"level":1} -->
-		<h1>Stories, notes, and product updates.</h1>
+		<h1>Fresh writing from the storefront.</h1>
 		<!-- /wp:heading -->
 
 		<!-- wp:paragraph -->
-		<p>The content side of the theme shares the same design language as the storefront, so campaigns and articles feel like one connected experience.</p>
+		<p>Use this view for campaign stories, product education, and editorial publishing that sits naturally alongside commerce.</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:query {"queryId":0,"query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"align":"wide","className":"post-feed"} -->
+	<!-- wp:query {"queryId":1,"query":{"perPage":6,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"align":"wide","className":"post-feed"} -->
 	<div class="wp-block-query alignwide post-feed">
 		<!-- wp:post-template {"layout":{"type":"grid","columnCount":3}} -->
 			<!-- wp:post-featured-image {"isLink":true} /-->
@@ -27,20 +27,6 @@
 			<!-- wp:query-pagination-previous /-->
 			<!-- wp:query-pagination-next /-->
 		<!-- /wp:query-pagination -->
-
-		<!-- wp:query-no-results -->
-		<!-- wp:group {"className":"section-card","layout":{"type":"constrained"}} -->
-		<div class="wp-block-group section-card">
-			<!-- wp:heading {"level":3} -->
-			<h3>No posts yet.</h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:paragraph -->
-			<p>Publish your first story and it will appear here automatically.</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
-		<!-- /wp:query-no-results -->
 	</div>
 	<!-- /wp:query -->
 </main>

@@ -1,0 +1,69 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.9/theme.json",
+	"version": 3,
+	"title": "Sunrise",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"color": "#f4f1de",
+					"name": "Base",
+					"slug": "base"
+				},
+				{
+					"color": "#3d405b",
+					"name": "Contrast",
+					"slug": "contrast"
+				},
+				{
+					"color": "#e07a5f",
+					"name": "Accent",
+					"slug": "accent"
+				},
+				{
+					"color": "#81b29a",
+					"name": "Accent Alt",
+					"slug": "accent-alt"
+				},
+				{
+					"color": "#f2cc8f",
+					"name": "Highlight",
+					"slug": "highlight"
+				},
+				{
+					"color": "#fbf8ef",
+					"name": "Surface",
+					"slug": "surface"
+				},
+				{
+					"color": "#696d84",
+					"name": "Muted",
+					"slug": "muted"
+				},
+				{
+					"color": "rgba(61,64,91,0.14)",
+					"name": "Border",
+					"slug": "border"
+				}
+			]
+		}
+	},
+	"styles": {
+		"elements": {
+			"button": {
+				"border": {
+					"radius": "0"
+				},
+				"color": {
+					"background": "var:preset|color|contrast",
+					"text": "var:preset|color|base"
+				},
+				":hover": {
+					"color": {
+						"background": "color-mix(in srgb, var(--wp--preset--color--contrast) 85%, var(--wp--preset--color--accent) 15%)"
+					}
+				}
+			}
+		}
+	}
+}
